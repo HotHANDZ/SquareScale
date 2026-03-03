@@ -1,1 +1,81 @@
-SquareScale README - (Plan to add instructions on managing branches for different tasks)
+Requirements
+
+Before you start, make sure you have the following programs installed:
+
+Java 17 LTS
+Download from Oracle JDK 17
+
+
+
+Make sure to set JAVA_HOME to the installation folder (instructions below)
+
+1. Run the following code:
+$env:JAVA_HOME="C:\path\to\jdk-17"  
+(replace everything in "" with the file location of the extracted jdk file.  Ask Brandon for help if needed)
+
+2.  Then run this code:
+$env:PATH="$env:JAVA_HOME\bin;$env:PATH"
+(this time go inside the jdk folder and ensure your path goes into the bin folder inside)
+
+3. Run this to verify Java version
+java -version  (Use this to verify you're using Java 17)
+
+
+Maven (included with Spring Boot wrapper, so no separate install required)
+
+Git
+Download from Git
+
+
+
+
+----------------------------------------------------------------------------------
+CLONING THE REPOSITORY
+
+1. Run the following code in a new terminal:
+git clone https://github.com/HotHANDZ/SquareScale.git
+
+if this doesn't work, go to our SquareScale github on your computer.  Then click the green "<> Code" button and copy the URL inside.
+
+Then replace the above URL with the one copied from the github
+
+2.  This should pull all the files and folders from the github
+
+
+NOTE:  If this doesn't work, ensure you have git installed and linked in VSCode.  The profile icon at the bottom left should let you then link your github account
+
+
+
+----------------------------------------------------------------------------------
+MAKING COMMITS TO THE GITHUB
+
+1. run the following code in the terminal (ENSURE YOU ARE IN THE ROOT FOLDER.  I reccomend running a new terminal)
+git add .
+
+2. Run this code and add a comment to what you changed
+git commit -m "add your changes test inside the quotations"
+
+3. Push the changes by running this code
+git push origin main
+
+
+----------------------------------------------------------------------------------
+WHEN STARTING WORK EACH DAY
+
+1. Run this code to pull all the recent commits
+git pull origin main
+
+
+----------------------------------------------------------------------------------
+RUNNING A LOCAL HOST TEST THROUGH MAVEN SPRING BOOT
+
+1. Ensure you are in the backend folder by running this in a new terminal:
+cd backend
+
+2. Run the following codes:
+.\mvnw.cmd clean install
+.\mvnw.cmd spring-boot:run
+
+3. Open your internet browser and go to this link:
+http://localhost:8080/test
+
