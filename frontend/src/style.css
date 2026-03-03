@@ -25,6 +25,10 @@ body{
     margin: auto;
 }
 
+.hidden{
+    display: none;
+}
+
 #userName{
     width: 350px;
 }
@@ -50,10 +54,17 @@ body{
     gap: 180px;
 }
 
+
+
 #forgotEmail{
     width: 350px;
 }
 
 #userID{
     width: 350px;
+}
+
+#email-ID-Error{
+    color: red;
+    visibility: hidden;
 }
