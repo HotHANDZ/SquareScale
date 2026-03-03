@@ -1,0 +1,55 @@
+# ======================
+# Java
+# ======================
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.log
+target/
+build/
+
+hs_err_pid*
+replay_pid*
+
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+venv/
+env/
+.venv/
+
+# ======================
+# MySQL / Database
+# ======================
+*.sql.bak
+*.db
+
+# ======================
+# Environment Variables (VERY IMPORTANT)
+# ======================
+.env
+
+# ======================
+# VSCode
+# ======================
+.vscode/
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Node (If you add JS tooling later)
+# ======================
+node_modules/
+dist/
