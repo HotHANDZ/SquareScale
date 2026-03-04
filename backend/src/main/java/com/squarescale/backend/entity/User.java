@@ -1,7 +1,6 @@
 package com.squarescale.backend.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 // Create @Entity @Table, @Id and #GeneratedValue allow for the database to recognize users as entities that it can store
@@ -12,18 +11,26 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
+    @Column(name = "userID")
     private Long id;
 
+    @Column(name = "firstName")
     private String firstName;
+
+    @Column(name = "lastName")
     private String lastName;
-    private String username; // should be in the format of regularBrandon, managerBrandon or AdminBrandon
-    private String password; // will be encrypted
+    @Column(length = 16)
+    private String username;
+
+    @Column(name = "passwordHash")
+    private String password; // for now this maps to passwordHash in MySQL
     
     private String email;
-    private String role; // Administrators, Mmanagers and users
-    
+
+    @Column(name = "roleID")
+    private Integer roleId; // 1=USER, 2=MANAGER, 3=ADMIN (matches your MySQL dump)
+
+    @Column(name = "isActive")
     // set values for trackign if an account is active or not which will be affected by number of failed attempts
     private boolean active = true;
     private int failedLoginAttempts = 0;
@@ -31,6 +38,9 @@ public class User {
     // keep tally of today's date and use it as a point of reference for when suspension should be lifted
     private LocalDateTime passwordLastSet;
     private LocalDateTime suspendedUntil;
+
+    @Column(name = "createdAt")
+    private LocalDateTime createdAt;
 
 
 
@@ -48,10 +58,11 @@ public class User {
 
         this.email = email;
 
-        this.role = role;
+        setRole(role);
 
         
         this.passwordLastSet = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
 
@@ -59,6 +70,7 @@ public class User {
     
     //Identification number
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     //Username
     public String getUsername() { return username; }
@@ -69,8 +81,32 @@ public class User {
     public void setPassword(String password) { this.password = password; }
 
     //Role
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public Integer getRoleId() { return roleId; }
+    public void setRoleId(Integer roleId) { this.roleId = roleId; }
+
+    public String getRole() {
+        if (roleId == null) return null;
+        return switch (roleId) {
+            case 3 -> "ADMIN";
+            case 2 -> "MANAGER";
+            case 1 -> "USER";
+            default -> "USER";
+        };
+    }
+
+    public void setRole(String role) {
+        if (role == null) {
+            this.roleId = null;
+            return;
+        }
+        String r = role.trim().toUpperCase();
+        this.roleId = switch (r) {
+            case "ADMIN" -> 3;
+            case "MANAGER" -> 2;
+            case "USER" -> 1;
+            default -> 1;
+        };
+    }
     
     //Active status
     public boolean isActive() { return active; }
@@ -91,5 +127,14 @@ public class User {
     //Date
     public LocalDateTime getSuspendedUntil() { return suspendedUntil; }
     public void setSuspendedUntil(LocalDateTime suspendedUntil) { this.suspendedUntil = suspendedUntil; }
+
+    public LocalDateTime getPasswordLastSet() { return passwordLastSet; }
+    public void setPasswordLastSet(LocalDateTime passwordLastSet) { this.passwordLastSet = passwordLastSet; }
+
+    public int getFailedLoginAttempts() { return failedLoginAttempts; }
+    public void setFailedLoginAttempts(int failedLoginAttempts) { this.failedLoginAttempts = failedLoginAttempts; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
 }//END OF CLASS

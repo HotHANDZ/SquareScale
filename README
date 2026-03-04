@@ -79,3 +79,21 @@ cd backend
 3. Open your internet browser and go to this link:
 http://localhost:8080/test
 
+
+
+----------------------------------------------------------------------------------
+RUNNING THE APPLICATION
+
+Each time you want to run the application
+1. Start the backend
+Run SquareScaleApplication (or .\mvnw spring-boot:run from the backend folder) and leave it running.
+You’re done when you see something like “Tomcat started on port 8080”.
+2. Open the frontend
+Either:
+Right‑click frontend/index.html → Open with Live Server, or
+Double‑click frontend/index.html in File Explorer to open it in the browser.
+
+3. MySQL: If it’s installed as a Windows service, it usually starts with your PC. If you start it manually, do that before starting the backend.
+
+
+Order: Start the backend first, then open the frontend, so the login request can reach http://localhost:8080.

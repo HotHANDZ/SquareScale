@@ -160,6 +160,12 @@ public class AdminController {
         String firstInitial = firstName.substring(0, 1).toLowerCase();
         String last = lastName.toLowerCase();
 
+        // MySQL column is varchar(16) in your dump; keep username within that limit.
+        int maxLastNameLen = 16 - 1 - 4; // 1 initial + 4 date digits
+        if (last.length() > maxLastNameLen) {
+            last = last.substring(0, maxLastNameLen);
+        }
+
         String datePart = LocalDate.now().format(DateTimeFormatter.ofPattern("MMyy"));
         return firstInitial + last + datePart;
     }
