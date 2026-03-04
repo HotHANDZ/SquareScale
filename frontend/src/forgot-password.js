@@ -1,10 +1,12 @@
+const API_BASE_URL = "http://localhost:8080";
+
 const passForm = document.getElementById('passForm');
 const errorText = document.getElementById('error-text');
 const credentialsForm = document.getElementById('credentials-form');
 const securityQuestionForm = document.getElementById('security-question-form');
 const newPasswordForm = document.getElementById('new-password-form');
 
-    passForm.addEventListener('submit', function(event) {
+    passForm.addEventListener('submit', async function(event) {
     event.preventDefault();
 
 
@@ -24,9 +26,8 @@ const newPasswordForm = document.getElementById('new-password-form');
 
         if(result.isValid) {
             console.log("Password Valid");
-            //API call for password change
-            errorText.classList.add('hidden');
-            window.location.replace("index.html");
+            // API call for password change
+            await resetPassword(newPassword);
 
         }
         else{
@@ -48,36 +49,45 @@ const newPasswordForm = document.getElementById('new-password-form');
 
 });
 
-    function credentialsLogic(){
+    async function credentialsLogic(){
 
         const userData = {
             email: document.getElementById('forgotEmail').value,
             userID: document.getElementById('userID').value
         };
 
-        //This is where the fetch() will be when the back end is ready. For now there's a hardcoded test case. Conditions will be replaced with a boolean value given by the API
+        try{
+            const res = await fetch(`${API_BASE_URL}/auth/forgot/verify-user`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData)
+            });
+
+            const text = await res.text();
+
+            if(res.ok){
+
+                errorText.classList.add('hidden');
+                console.log("Success");
 
 
-        if(userData.email === 'tester@gmail.com' && userData.userID === 'testerC') {
+                credentialsForm.classList.add('hidden');
+                securityQuestionForm.classList.remove('hidden');
 
-            errorText.classList.add('hidden');
-            console.log("Success");
-
-
-            credentialsForm.classList.add('hidden');
-            securityQuestionForm.classList.remove('hidden');
-
-            const questions = ["What city were you born in", "Name of first pet", "Mothers maiden name"]; //This will later use a fetch() instead
-            populateSecurityQuestions(questions);
-        }
-
-        else {
-
-            errorText.innerHTML = "Email or UserID is incorrect.";
+                const questions = ["What city were you born in", "Name of first pet", "Mothers maiden name"]; //Still static for this project
+                populateSecurityQuestions(questions);
+            }
+            else{
+                errorText.innerHTML = text || "Email or UserID is incorrect.";
+                errorText.classList.remove('hidden');
+                console.log("Error");
+                passForm.reset();
+                document.getElementById("forgotEmail").focus();
+            }
+        } catch(e){
+            console.error(e);
+            errorText.innerHTML = "Could not reach backend. Make sure the server is running on port 8080.";
             errorText.classList.remove('hidden');
-            console.log("Error");
-            passForm.reset();
-            document.getElementById("forgotEmail").focus();
         }
 
     }
@@ -143,12 +153,44 @@ const newPasswordForm = document.getElementById('new-password-form');
         const hasNumber = /\d/.test(password);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         const isLongEnough = password.length >= 8;
-        //API call to check if password has already been used
-        //const uniquePassword =
 
         return{
             isValid: startsWithLetter && hasNumber && hasSpecialChar && isLongEnough,
             checks: {startsWithLetter, hasNumber, hasSpecialChar, isLongEnough}
         };
 
+    }
+
+    async function resetPassword(newPassword){
+
+        const userData = {
+            email: document.getElementById('forgotEmail').value,
+            userID: document.getElementById('userID').value,
+            newPassword: newPassword
+        };
+
+        try{
+            const res = await fetch(`${API_BASE_URL}/auth/forgot/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData)
+            });
+
+            const text = await res.text();
+
+            if(res.ok){
+                errorText.classList.add('hidden');
+                alert(text || "Password reset successfully. Please log in with your new password.");
+                window.location.replace("index.html");
+            }
+            else{
+                errorText.innerHTML = text || "Unable to reset password.";
+                errorText.classList.remove('hidden');
+            }
+
+        } catch(e){
+            console.error(e);
+            errorText.innerHTML = "Could not reach backend. Make sure the server is running on port 8080.";
+            errorText.classList.remove('hidden');
+        }
     }

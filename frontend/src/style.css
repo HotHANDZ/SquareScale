@@ -66,5 +66,105 @@ body{
 
 #error-text{
     color: red;
+}
 
+/* ----- Home pages (regular, manager, admin) ----- */
+.user-badge {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+}
+.user-badge .badge-img {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+}
+.logo-img {
+    height: 100px;
+    width: 100px;
+}
+.home-main {
+    margin-top: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem;
+}
+.home-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.home-desc {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+.btn-back {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background: rgb(129, 193, 228);
+    border: 1px solid rgb(100, 160, 200);
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.btn-back:hover {
+    background: rgb(110, 175, 220);
+}
+
+/* Admin: Add User section */
+.add-user-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid rgb(129, 193, 228);
+    border-radius: 12px;
+    background: #fff;
+    max-width: 400px;
+}
+.add-user-section h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.add-user-hint {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.add-user-form label {
+    font-weight: 500;
+}
+.add-user-form input,
+.add-user-form select {
+    padding: 0.4rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+.btn-submit {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background: rgb(80, 160, 100);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.btn-submit:hover {
+    background: rgb(70, 140, 85);
+}
+.message-text {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+}
+.message-text.success-text {
+    color: green;
+}
+.message-text.error-text {
+    color: red;
 }

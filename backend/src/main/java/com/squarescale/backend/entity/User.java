@@ -33,6 +33,7 @@ public class User {
     @Column(name = "isActive")
     // set values for trackign if an account is active or not which will be affected by number of failed attempts
     private boolean active = true;
+    @Column(name = "failed_login_attempts")
     private int failedLoginAttempts = 0;
 
     // keep tally of today's date and use it as a point of reference for when suspension should be lifted

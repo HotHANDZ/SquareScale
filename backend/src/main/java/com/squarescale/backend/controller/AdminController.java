@@ -58,8 +58,32 @@ public class AdminController {
         }
 
         user.setUsername(generatedUsername);
-        userRepo.save(user);
-        return ResponseEntity.ok("User created with username: " + generatedUsername);
+
+        // Assign a new id since the MySQL table's userID is not auto-incrementing.
+        Long nextId = userRepo.findAll().stream()
+                .mapToLong(u -> u.getId() == null ? 0L : u.getId())
+                .max()
+                .orElse(0L) + 1L;
+        user.setId(nextId);
+
+        // Ensure required audit fields are set so MySQL NOT NULL columns are satisfied.
+        if (user.getCreatedAt() == null) {
+            user.setCreatedAt(LocalDateTime.now());
+        }
+        if (user.getPasswordLastSet() == null) {
+            user.setPasswordLastSet(LocalDateTime.now());
+        }
+        // New users should start as active with zero failed attempts.
+        user.setActive(true);
+        user.setFailedLoginAttempts(0);
+
+        try {
+            userRepo.save(user);
+            return ResponseEntity.ok("User created with username: " + generatedUsername);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error saving user: " + e.getMessage());
+        }
     }
 
     /** PUT /admin/users/{id} – Update an existing user's name, email, and role. */

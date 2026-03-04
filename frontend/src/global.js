@@ -32,10 +32,21 @@ if (loginForm) {
 
       const data = await res.json();
 
-      // Requirement: show username (and picture placeholder) top-right after login.
-      if (badge && badgeUsername) {
-        badgeUsername.textContent = data.username;
-        badge.style.display = "flex";
+      // Store user for home pages and redirect by role.
+      sessionStorage.setItem("user", JSON.stringify({
+        userId: data.userId,
+        username: data.username,
+        role: data.role,
+        email: data.email
+      }));
+
+      const role = (data.role || "").toUpperCase();
+      if (role === "ADMIN") {
+        window.location.href = "admin-home.html";
+      } else if (role === "MANAGER") {
+        window.location.href = "manager-home.html";
+      } else {
+        window.location.href = "regular-user-home.html";
       }
     } catch (e) {
       console.error(e);
