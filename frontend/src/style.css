@@ -64,7 +64,7 @@ body{
     width: 350px;
 }
 
-#email-ID-Error{
+#error-text{
     color: red;
-    visibility: hidden;
+
 }
