@@ -1,28 +1,36 @@
+/* SquareScale shared styles: login/create/forgot forms, home pages, admin tables and modal. */
 body{
     background-color: rgb(240, 242, 246);
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40vh;
-
-
+    justify-content: center;
+    min-height: 100vh;
+    margin-top: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 18px;
+    gap: 1.5rem;
 }
 
 .parent-div{
     display: flex;
     align-items: center;
-    width: 400px;
-    height: 170px;
-    margin: auto;
-    border-style: solid;
-    border-color: rgb(129,193,228);
-    border-radius: 12px;
+    width: 440px;
+    /* Let the box grow with its contents so inputs stay inside */
+    min-height: 170px;
+    padding: 1.25rem;
+    margin: 0 auto;
+    border: 1px solid rgb(129,193,228);
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 .child-div{
     display: grid;
     place-items: center;
     margin: auto;
+    row-gap: 0.75rem;
 }
 
 .hidden{
@@ -40,12 +48,14 @@ body{
 .logoSpace{
     display: grid;
     place-items: center;
-    margin: auto;
-    width: 400px;
-    height: 100px;
-    border-style: solid;
-    border-color: rgb(129,193,228);
-    border-radius: 12px;
+    margin: 0 auto;
+    width: 440px;
+    height: 110px;
+    border: 1px solid rgb(129,193,228);
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
 }
 
 #forgot-create{
@@ -66,6 +76,46 @@ body{
 
 #error-text{
     color: red;
+}
+
+/* General form element styling for better readability */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+select{
+    padding: 0.5rem 0.65rem;
+    border-radius: 8px;
+    border: 1px solid rgb(180, 200, 220);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+select:focus{
+    outline: none;
+    border-color: rgb(129,193,228);
+    box-shadow: 0 0 0 2px rgba(129,193,228,0.35);
+}
+
+/* Primary buttons */
+#loginButton,
+.btn-submit{
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    background: rgb(80, 160, 100);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+#loginButton:hover,
+.btn-submit:hover{
+    background: rgb(70, 140, 85);
 }
 
 /* ----- Home pages (regular, manager, admin) ----- */
@@ -167,4 +217,91 @@ body{
 }
 .message-text.error-text {
     color: red;
+}
+
+/* Admin tables */
+.table-wrapper{
+    margin-top: 0.75rem;
+    max-height: 260px;
+    overflow: auto;
+}
+.admin-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.admin-table th,
+.admin-table td{
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid #e0e6ee;
+    text-align: left;
+    white-space: nowrap;
+}
+.admin-table thead{
+    background-color: #f3f6fb;
+}
+.admin-table tr:nth-child(even){
+    background-color: #fafbff;
+}
+.btn-small{
+    padding: 0.25rem 0.5rem;
+    margin-right: 0.15rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid rgb(129,193,228);
+    background: #fff;
+    cursor: pointer;
+}
+.btn-small:hover{
+    background: rgb(230,242,252);
+}
+
+/* Edit user modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal.hidden {
+    display: none;
+}
+.modal-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgb(129,193,228);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+}
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.modal-content label {
+    display: block;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.25rem;
+}
+.modal-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+}
+.modal-actions .btn-back,
+.modal-actions .btn-submit {
+    flex: 1;
 }

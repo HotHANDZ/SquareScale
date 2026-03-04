@@ -4,26 +4,35 @@ import com.squarescale.backend.entity.User;
 import com.squarescale.backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * Handles login, forgot-password verification, and password reset.
+ * Passwords are stored/checked using BCrypt; legacy plain-text is migrated on first successful login.
+ */
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserRepository userRepo) {
+    public AuthController(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    /** Request/response DTOs for auth endpoints. */
     public record LoginRequest(String username, String password) {}
     public record LoginResponse(Long userId, String username, String role, String email) {}
     public record ForgotUserRequest(String email, String userID) {}
     public record ResetPasswordRequest(String email, String userID, String newPassword) {}
 
+    /** Login: validate credentials, enforce active/suspended, apply 3-attempt lockout, migrate plain-text to BCrypt. */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         if (req == null || req.username() == null || req.password() == null) {
@@ -37,6 +46,7 @@ public class AuthController {
 
         User user = u.get();
 
+        // Block inactive or time-suspended accounts.
         if (!user.isActive()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is inactive");
         }
@@ -45,19 +55,32 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is suspended until " + user.getSuspendedUntil());
         }
 
-        // Simple password check for a college project (upgrade to hashed passwords later).
-        if (user.getPassword() == null || !user.getPassword().equals(req.password())) {
+        // BCrypt hashes start with "$2"; otherwise treat as legacy plain-text for migration.
+        boolean passwordOk = false;
+        if (user.getPassword() != null) {
+            if (user.getPassword().startsWith("$2")) {
+                passwordOk = passwordEncoder.matches(req.password(), user.getPassword());
+            } else {
+                passwordOk = user.getPassword().equals(req.password());
+            }
+        }
+        if (!passwordOk) {
+            // Requirement: max 3 wrong attempts, then suspend account.
             int attempts = user.getFailedLoginAttempts() + 1;
             user.setFailedLoginAttempts(attempts);
-
-            // Requirement: max 3 wrong attempts, then suspend.
             if (attempts >= 3) {
                 user.setActive(false);
                 user.setSuspendedUntil(LocalDateTime.now().plusDays(1));
+                userRepo.save(user);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Maximum of 3 wrong password attempts exceeded. Account suspended. Contact an administrator.");
             }
-
             userRepo.save(user);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+        // Migrate plain-text password to BCrypt on first successful login
+        if (!user.getPassword().startsWith("$2")) {
+            user.setPassword(passwordEncoder.encode(req.password()));
+            user.setPasswordLastSet(LocalDateTime.now());
         }
 
         // Successful login resets failed attempts.
@@ -101,19 +124,21 @@ public class AuthController {
 
         User user = u.get();
 
+        // Enforce password rules (min 8 chars, letter, number, special).
         String pwdErr = validatePassword(req.newPassword());
         if (pwdErr != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(pwdErr);
         }
 
-        // Simple password reuse check: don't allow same as current.
-        if (req.newPassword().equals(user.getPassword())) {
+        // Reject if new password equals current (works for both hashed and legacy).
+        if (user.getPassword() != null && (user.getPassword().startsWith("$2")
+                ? passwordEncoder.matches(req.newPassword(), user.getPassword())
+                : req.newPassword().equals(user.getPassword()))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("New password cannot be the same as the old password.");
         }
 
-        // For this project we store the password as plain text.
-        user.setPassword(req.newPassword());
+        user.setPassword(passwordEncoder.encode(req.newPassword()));
         user.setPasswordLastSet(LocalDateTime.now());
         user.setFailedLoginAttempts(0);
 

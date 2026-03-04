@@ -3,11 +3,12 @@ package com.squarescale.backend.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-// Create @Entity @Table, @Id and #GeneratedValue allow for the database to recognize users as entities that it can store
+/**
+ * JPA entity mapped to the users table. Stores credentials (password as BCrypt in passwordHash),
+ * role (roleID 1=USER, 2=MANAGER, 3=ADMIN), active/suspended state, and failed-login count.
+ */
 @Entity
 @Table(name = "users")
-
-
 public class User {
 
     @Id
@@ -23,22 +24,21 @@ public class User {
     private String username;
 
     @Column(name = "passwordHash")
-    private String password; // for now this maps to passwordHash in MySQL
-    
+    private String password;  // BCrypt hash stored in MySQL passwordHash column
+
     private String email;
 
     @Column(name = "roleID")
-    private Integer roleId; // 1=USER, 2=MANAGER, 3=ADMIN (matches your MySQL dump)
+    private Integer roleId;   // 1=USER, 2=MANAGER, 3=ADMIN
 
     @Column(name = "isActive")
-    // set values for trackign if an account is active or not which will be affected by number of failed attempts
     private boolean active = true;
-    @Column(name = "failed_login_attempts")
-    private int failedLoginAttempts = 0;
 
-    // keep tally of today's date and use it as a point of reference for when suspension should be lifted
-    private LocalDateTime passwordLastSet;
-    private LocalDateTime suspendedUntil;
+    @Column(name = "failed_login_attempts")
+    private int failedLoginAttempts = 0;  // Reset on success; 3 failures triggers suspend
+
+    private LocalDateTime passwordLastSet;  // Used for expired-password report (e.g. >3 months)
+    private LocalDateTime suspendedUntil;   // If in future, user cannot log in
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
@@ -85,6 +85,7 @@ public class User {
     public Integer getRoleId() { return roleId; }
     public void setRoleId(Integer roleId) { this.roleId = roleId; }
 
+    /** Maps roleID to string for API (1=USER, 2=MANAGER, 3=ADMIN). */
     public String getRole() {
         if (roleId == null) return null;
         return switch (roleId) {
@@ -95,6 +96,7 @@ public class User {
         };
     }
 
+    /** Sets roleId from string (ADMIN/MANAGER/USER). */
     public void setRole(String role) {
         if (role == null) {
             this.roleId = null;

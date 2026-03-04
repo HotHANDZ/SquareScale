@@ -1,4 +1,7 @@
-// Shared script for post-login home pages: enforce login, show user badge, provide logout.
+/**
+ * Shared script for regular-user-home, manager-home, admin-home.
+ * Ensures user is in sessionStorage (else redirect to login), shows username in badge, handles Back to Login (clear session + redirect).
+ */
 (function () {
   const userJson = sessionStorage.getItem("user");
   if (!userJson) {

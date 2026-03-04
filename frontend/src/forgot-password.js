@@ -1,3 +1,8 @@
+/**
+ * Forgot-password page: (1) verify email + userID via /auth/forgot/verify-user,
+ * (2) show security questions (static list), (3) on correct answer show new-password form,
+ * (4) validate password rules then POST /auth/forgot/reset-password.
+ */
 const API_BASE_URL = "http://localhost:8080";
 
 const passForm = document.getElementById('passForm');
@@ -6,21 +11,15 @@ const credentialsForm = document.getElementById('credentials-form');
 const securityQuestionForm = document.getElementById('security-question-form');
 const newPasswordForm = document.getElementById('new-password-form');
 
-    passForm.addEventListener('submit', async function(event) {
-    event.preventDefault();
+passForm.addEventListener('submit', async function(event) {
+  event.preventDefault();
 
-
-    if(!credentialsForm.classList.contains('hidden')) {
-        //credentials logic
-        credentialsLogic();
-    }
-    else if(!securityQuestionForm.classList.contains('hidden')) {
-        //security question logic
-        securityQuestionLogic();
-    }
-    else{
-        //new password logic
-        const newPassword = document.getElementById('new-password').value;
+  if (!credentialsForm.classList.contains('hidden')) {
+    await credentialsLogic();
+  } else if (!securityQuestionForm.classList.contains('hidden')) {
+    securityQuestionLogic();
+  } else {
+    const newPassword = document.getElementById('new-password').value;
 
         const result = checkPassword(newPassword);
 

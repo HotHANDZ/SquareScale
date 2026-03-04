@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Admin home: Add User form, All Users table (activate/deactivate/suspend/email/edit), Expired Passwords report, Edit User modal. -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +17,7 @@
 
 <main class="home-main">
     <h1 class="home-title">Administrator Home</h1>
-    <p class="home-desc">This is the administrator home page. You can add users and assign roles below.</p>
+    <p class="home-desc">This is the administrator home page. You can add users, manage their status, and view password reports.</p>
     <button type="button" id="backToLogin" class="btn-back">Back to Login</button>
 
     <section class="add-user-section">
@@ -42,6 +43,77 @@
             <button type="submit" class="btn-submit">Create User</button>
         </form>
         <p id="addUserMessage" class="message-text hidden"></p>
+    </section>
+
+    <section class="add-user-section" id="userListSection">
+        <h2>All Users</h2>
+        <p class="add-user-hint">View all users in the system and manage their status.</p>
+        <div id="editUserModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Edit User</h3>
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <label for="editFirstName">First name</label>
+                    <input type="text" id="editFirstName" maxlength="45">
+                    <label for="editLastName">Last name</label>
+                    <input type="text" id="editLastName" maxlength="45">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail">
+                    <label for="editRole">Role</label>
+                    <select id="editRole">
+                        <option value="USER">Regular User (Accountant)</option>
+                        <option value="MANAGER">Manager</option>
+                        <option value="ADMIN">Administrator</option>
+                    </select>
+                    <label for="editNewPassword">New password (leave blank to keep current)</label>
+                    <input type="password" id="editNewPassword" placeholder="Min 8 chars, letter, number, special char">
+                    <p id="editPasswordError" class="error-text hidden"></p>
+                    <div class="modal-actions">
+                        <button type="button" id="editUserCancel" class="btn-back">Cancel</button>
+                        <button type="submit" class="btn-submit">Save</button>
+                    </div>
+                </form>
+                <p id="editUserMessage" class="message-text hidden"></p>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="admin-table" id="userTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Active</th>
+                    <th>Suspended Until</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Filled by admin-home.js -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="add-user-section" id="expiredPasswordsSection">
+        <h2>Expired Passwords</h2>
+        <p class="add-user-hint">Users whose passwords are older than 3 months.</p>
+        <div class="table-wrapper">
+            <table class="admin-table" id="expiredTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password Last Set</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Filled by admin-home.js -->
+                </tbody>
+            </table>
+        </div>
     </section>
 </main>
 

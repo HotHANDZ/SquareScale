@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 
-// This interface extends JpaRepository, which provides basic CRUD operations for the User entity.  
-// We also define custom query methods to find users by username and to find users whose password was last set before a certain date.
+/**
+ * Spring Data JPA repository for the users table. Provides CRUD plus custom queries
+ * for login (findByUsername) and expired-password report (findByPasswordLastSetBefore).
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // find a user by looking for their username.  "Optional<User>" is used to handle if the username doesn't exist
     Optional<User> findByUsername(String username);
 
-    // find all users whose password was last set before a certain date, which will be used to identify accounts that need to be suspended
+    /** Used by admin expired-passwords report: passwords older than given date. */
     List<User> findByPasswordLastSetBefore(java.time.LocalDateTime dateTime);
 }

@@ -1,17 +1,18 @@
-// Simple login wiring: frontend -> backend (/auth/login)
+/**
+ * Login page: submits credentials to /auth/login, then redirects by role
+ * (ADMIN -> admin-home, MANAGER -> manager-home, USER -> regular-user-home).
+ */
 const API_BASE_URL = "http://localhost:8080";
 
 const loginForm = document.getElementById("loginForm");
 const usernameInput = document.getElementById("userName");
 const passwordInput = document.getElementById("password");
-
 const badge = document.getElementById("loggedInBadge");
 const badgeUsername = document.getElementById("loggedInUsername");
 
 if (loginForm) {
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-
     const payload = {
       username: usernameInput?.value?.trim(),
       password: passwordInput?.value ?? "",

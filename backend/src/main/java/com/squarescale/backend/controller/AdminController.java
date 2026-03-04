@@ -4,6 +4,7 @@ package com.squarescale.backend.controller;
 import com.squarescale.backend.entity.User;
 import com.squarescale.backend.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,12 +22,16 @@ public class AdminController {
     // Only these three roles are allowed when creating or updating a user.
     private static final Set<String> ALLOWED_ROLES = Set.of("ADMIN", "MANAGER", "USER");
 
-    // Injected by Spring; used to read and write users in the database.
     private final UserRepository userRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserRepository userRepo) {
+    public AdminController(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
+
+    /** Request body for updating a user; newPassword is optional (if provided, stored encrypted). */
+    public record UpdateUserRequest(String firstName, String lastName, String email, String role, String newPassword) {}
 
     // ----- Endpoints -----
 
@@ -58,6 +63,7 @@ public class AdminController {
         }
 
         user.setUsername(generatedUsername);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // Assign a new id since the MySQL table's userID is not auto-incrementing.
         Long nextId = userRepo.findAll().stream()
@@ -86,21 +92,25 @@ public class AdminController {
         }
     }
 
-    /** PUT /admin/users/{id} – Update an existing user's name, email, and role. */
+    /** PUT /admin/users/{id} – Update an existing user's name, email, role, and optionally set a new password (stored encrypted). */
     @PutMapping("/users/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest req) {
+        if (req == null) return ResponseEntity.badRequest().body("Request body required");
         Optional<User> u = userRepo.findById(id);
         if (u.isEmpty()) return ResponseEntity.notFound().build();
         User user = u.get();
 
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setEmail(updatedUser.getEmail());
-
-        if (!isValidRole(updatedUser.getRole())) {
-            return ResponseEntity.badRequest().body("Invalid role. Allowed roles: ADMIN, MANAGER, USER");
+        if (req.firstName() != null) user.setFirstName(req.firstName());
+        if (req.lastName() != null) user.setLastName(req.lastName());
+        if (req.email() != null) user.setEmail(req.email());
+        if (req.role() != null) {
+            if (!isValidRole(req.role())) return ResponseEntity.badRequest().body("Invalid role. Allowed roles: ADMIN, MANAGER, USER");
+            user.setRole(req.role());
         }
-        user.setRole(updatedUser.getRole());
+        if (req.newPassword() != null && !req.newPassword().trim().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(req.newPassword().trim()));
+            user.setPasswordLastSet(LocalDateTime.now());
+        }
 
         userRepo.save(user);
         return ResponseEntity.ok("User updated");

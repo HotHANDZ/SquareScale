@@ -3,10 +3,14 @@ package com.squarescale.backend.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Public (unauthenticated) endpoints: e.g. first-time access request from the "Create new user" flow.
+ */
 @RestController
 @RequestMapping("/public")
 public class PublicController {
 
+    /** Body for the request-access form (first name, last name, address, DOB, email). */
     public record RegistrationRequest(
             String firstName,
             String lastName,
