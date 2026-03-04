@@ -1,0 +1,42 @@
+### Get all users
+GET http://localhost:8080/admin/users
+Accept: application/json
+
+### Create a new user
+POST http://localhost:8080/admin/users
+Content-Type: application/json
+
+{
+  "firstName": "Brandon",
+  "lastName": "Smith",
+  "username": "adminBrandon",
+  "password": "Test123!",
+  "email": "brandon@example.com",
+  "role": "ADMIN"
+}
+
+### Update a user
+PUT http://localhost:8080/admin/users/1
+Content-Type: application/json
+
+{
+  "firstName": "Brandon",
+  "lastName": "Johnson",
+  "email": "brandonj@example.com",
+  "role": "MANAGER"
+}
+
+### Deactivate a user
+POST http://localhost:8080/admin/users/1/deactivate
+
+### Activate a user
+POST http://localhost:8080/admin/users/1/activate
+
+### Suspend a user
+POST http://localhost:8080/admin/users/1/suspend?untilDateTime=2026-04-03T12:00:00
+
+### Expired passwords
+GET http://localhost:8080/admin/users/expired-passwords
+
+### Send email
+POST http://localhost:8080/admin/users/1/send-email?message=Hello%20user
