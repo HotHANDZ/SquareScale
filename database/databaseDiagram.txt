@@ -1,0 +1,39 @@
++----------------------+
+|        users         |
++----------------------+
+| PK userID : INT      |
+| username             |
+| passwordHash         |
+| email                |
+| createdAt            |
+| roleID : INT         |
+| isActive : TINYINT   |
+| firstName            |
+| lastName             |
++----------------------+
+           │
+           │ (1-to-1)
+           ▼
++-------------------------------+
+|           accounts            |
++-------------------------------+
+| PK/FK userID                  |
+| description                   |
+| createdAt                     |
+| initialBalance : FLOAT        |
+| debit : FLOAT                 |
+| credit : FLOAT                |
+| balance : FLOAT               |
++-------------------------------+
+           │
+           │ (1-to-many)
+           ▼
++----------------------+
+|    transactions      |
++----------------------+
+| PK transactionID     |
+| FK userID            |
+| amount               |
+| type                 |
+| timestamp            |
++----------------------+
