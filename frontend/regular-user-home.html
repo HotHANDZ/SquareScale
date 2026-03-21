@@ -6,21 +6,31 @@
     <title>SquareScale: Regular User Home</title>
     <link rel="stylesheet" href="src/style.css">
 </head>
-<body>
-<div class="logoSpace">
-    <img src="src/images/logo.png" alt="SquareScale Logo" id="logo" class="logo-img">
-</div>
-<div id="loggedInBadge" class="user-badge">
-    <img src="src/images/logo.png" alt="Profile" class="badge-img">
-    <span id="loggedInUsername"></span>
-</div>
+<body class="regular-user-home">
+<nav class="nav-bar">
+    <div class="nav-logo">
+        <img src="src/images/logo.png" alt="SquareScale Logo" class="nav-logo-img">
+    </div>
+    <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Chart of Accounts</a></li>
+    </ul>
+</nav>
 
-<main class="home-main">
-    <h1 class="home-title">Regular User Home</h1>
-    <p class="home-desc">This is the regular user (accountant) home page.</p>
-    <button type="button" id="backToLogin" class="btn-back">Back to Login</button>
-</main>
+<div class="content-area">
+    <div id="loggedInBadge" class="user-badge">
+        <img src="src/images/logo.png" alt="Profile" class="badge-img">
+        <span id="loggedInUsername"></span>
+    </div>
+
+    <main class="home-main">
+        <h1 class="content-area-title">Dashboard</h1>
+        <p class="home-desc">This is the regular user (accountant) home page.</p>
+        <button type="button" id="backToLogin" class="btn-back">Back to Login</button>
+    </main>
+</div>
 
 <script src="src/post-login.js"></script>
+<script src="src/regular-user-home.js"></script>
 </body>
 </html>

@@ -142,6 +142,7 @@ select:focus{
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
+    
 }
 .home-title {
     font-size: 1.5rem;
@@ -151,6 +152,14 @@ select:focus{
     margin-bottom: 1.5rem;
     color: #333;
 }
+
+.regular-user-home {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+}
+
 .btn-back {
     padding: 0.5rem 1rem;
     cursor: pointer;
@@ -161,6 +170,20 @@ select:focus{
 }
 .btn-back:hover {
     background: rgb(110, 175, 220);
+}
+
+.content-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 1.5rem;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+.content-area-title{
+    font-size: 1.5rem;
+    
 }
 
 /* Admin: Add User section */
@@ -285,6 +308,7 @@ select:focus{
     margin-top: 0;
     margin-bottom: 1rem;
 }
+
 .modal-content label {
     display: block;
     font-weight: 500;
@@ -304,4 +328,86 @@ select:focus{
 .modal-actions .btn-back,
 .modal-actions .btn-submit {
     flex: 1;
+}
+
+/* Navigation bar styles */
+.nav-bar {
+    width: 200px;
+    height: 100vh;
+    background-color: #ffffff;
+    border: 1px solid rgb(129,193,228);
+    border-radius: 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-logo {
+    text-align: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgb(129,193,228);
+}
+
+.nav-logo-img {
+    width: 120px;
+    height: auto;
+}
+
+.nav-bar ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 1rem 0;
+    margin: 0;
+    flex: 1;
+}
+
+.nav-bar li {
+    padding: 1rem;
+    text-align: center;
+}
+
+.nav-bar li.active {
+    background-color: rgb(240, 242, 246);
+    border-radius: 4px;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block;
+}
+
+.nav-bar a:hover {
+    color: rgb(129,193,228);
+}
+
+/* Chart of Accounts table - Brandon already made great tables so im copying them */
+.coa-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    table-layout: fixed;
+}
+.coa-table th,
+.coa-table td{
+    padding: 0.35rem 1rem;
+    border-bottom: 1px solid #e0e6ee;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.coa-table thead{
+    background-color: #f3f6fb;
+}
+.coa-table tr:nth-child(even){
+    background-color: #fafbff;
+}
+
+.home-main:has(.coa-table) {
+    max-width: none;
+    width: 100%;
+    padding: 0;
 }
