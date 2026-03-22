@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h1 class="home-title">Chart of Accounts</h1>
         <div>
             <label for="coa-search-input">Search:</label>
-            <input id="coa-search-input" type="text" placeholder="Type account number or name" />
+            <input id="coa-search-input" type="text"/>
         </div>
         <table class="coa-table">
             <thead>
@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
             const text = link.textContent.trim();
 
+            //This is exactly where content changes happen
             if (text === 'Dashboard') {
                 mainContent.innerHTML = dashboardContent;
                 setActiveLink('Dashboard');
@@ -129,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainContent.innerHTML = chartContent;
                 setActiveLink('Chart of Accounts');
 
-                //Event listener for ledger links. Currently it only works for the hard coddded 001 account. Fix later with more JS and API calls.
+                //Event listener for ledger links. Currently it only works for the hard codded 001 account. Fix later with more JS and API calls.
                 const ledgerLinks = document.querySelectorAll('.coa-table a');
 
                 ledgerLinks.forEach(link => {
@@ -137,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.preventDefault();
                         const text = link.textContent.trim();
 
+                        //This is exactly where content changes happen
                         if (text === '001') {
                             mainContent.innerHTML = ledgerContent;
                             setActiveLink('Chart of Accounts');
