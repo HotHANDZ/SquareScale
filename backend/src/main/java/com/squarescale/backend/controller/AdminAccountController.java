@@ -26,6 +26,7 @@ public class AdminAccountController {
 
     private static final Set<String> STATEMENT_TYPES = Set.of("IS", "BS", "RE");
     private static final Set<String> NORMAL_SIDES = Set.of("DEBIT", "CREDIT");
+    private static final Set<String> ACCOUNT_CATEGORIES = Set.of("Asset", "Liability", "Equity");
 
     private final AccountRepository accountRepo;
     private final UserRepository userRepo;
@@ -321,6 +322,9 @@ public class AdminAccountController {
         }
         if (req.accountCategory() == null || req.accountCategory().isBlank()) {
             return "Account category is required";
+        }
+        if (!ACCOUNT_CATEGORIES.contains(req.accountCategory().trim())) {
+            return "Account category must be Asset, Liability, or Equity.";
         }
         if (req.accountSubcategory() == null || req.accountSubcategory().isBlank()) {
             return "Account subcategory is required";

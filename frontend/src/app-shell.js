@@ -80,7 +80,7 @@
       </section>
       <section>
         <h4>Search &amp; filters</h4>
-        <p>Use <strong>Quick search</strong> to find accounts by name or number. Refine the list with filters for name, number, category, subcategory, balance range, and active status.</p>
+        <p>Use <strong>Quick search</strong> to find accounts by name or number. Refine the list with filters for name, number, category, balance range, and active status.</p>
       </section>
       <section>
         <h4>Ledgers</h4>

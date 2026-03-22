@@ -568,6 +568,26 @@ button.app-nav-logout:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    align-items: center;
+}
+.account-filters .filter-actions .btn-submit,
+.account-filters .filter-actions .btn-back {
+    margin-top: 0;
+    min-width: 11.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+.account-filters .filter-actions .btn-back {
+    background: rgb(255, 214, 214);
+    color: rgb(90, 35, 35);
+    border: 1px solid rgb(220, 160, 160);
+}
+.account-filters .filter-actions .btn-back:hover {
+    background: rgb(248, 195, 195);
+    border-color: rgb(200, 140, 140);
 }
 .ledger-main {
     max-width: 900px;

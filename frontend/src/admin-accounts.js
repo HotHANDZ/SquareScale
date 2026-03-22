@@ -95,7 +95,7 @@ function wireAccountsViewControls() {
   }
   if (btnClear) {
     btnClear.addEventListener("click", async () => {
-      ["filterSearch", "filterName", "filterNumber", "filterCategory", "filterSubcategory", "filterMinBal", "filterMaxBal"].forEach((id) => {
+      ["filterSearch", "filterName", "filterNumber", "filterCategory", "filterMinBal", "filterMaxBal"].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.value = "";
       });
@@ -110,7 +110,36 @@ function wireAccountsViewControls() {
   }
 }
 
+const ACCOUNT_CATEGORY_OPTIONS = ["Asset", "Liability", "Equity"];
+
+/** Ensures standard options plus an extra option when the saved value is not Asset/Liability/Equity. */
+function fillCategorySelect(selectEl, currentValue) {
+  if (!selectEl) return;
+  const cur = (currentValue || "").trim();
+  selectEl.innerHTML = '<option value="">— Choose —</option>';
+  ACCOUNT_CATEGORY_OPTIONS.forEach((v) => {
+    const opt = document.createElement("option");
+    opt.value = v;
+    opt.textContent = v;
+    selectEl.appendChild(opt);
+  });
+  if (cur && !ACCOUNT_CATEGORY_OPTIONS.includes(cur)) {
+    const opt = document.createElement("option");
+    opt.value = cur;
+    opt.textContent = `${cur} (legacy)`;
+    selectEl.appendChild(opt);
+  }
+  selectEl.value = cur;
+}
+
 function accountFormFieldsHTML(prefix) {
+  const subcategoryBlock =
+    prefix === "add"
+      ? ""
+      : `
+    <label for="${prefix}_accountSubcategory">Account subcategory * (e.g. Current assets)</label>
+    <input type="text" id="${prefix}_accountSubcategory" required maxlength="100">
+`;
   return `
     <label for="${prefix}_accountName">Account name *</label>
     <input type="text" id="${prefix}_accountName" required maxlength="255">
@@ -128,12 +157,14 @@ function accountFormFieldsHTML(prefix) {
       <option value="Credit">Credit</option>
     </select>
 
-    <label for="${prefix}_accountCategory">Account category * (e.g. Asset)</label>
-    <input type="text" id="${prefix}_accountCategory" required maxlength="100">
-
-    <label for="${prefix}_accountSubcategory">Account subcategory * (e.g. Current assets)</label>
-    <input type="text" id="${prefix}_accountSubcategory" required maxlength="100">
-
+    <label for="${prefix}_accountCategory">Account category *</label>
+    <select id="${prefix}_accountCategory" required>
+      <option value="">— Choose —</option>
+      <option value="Asset">Asset</option>
+      <option value="Liability">Liability</option>
+      <option value="Equity">Equity</option>
+    </select>
+${subcategoryBlock}
     <label for="${prefix}_initialBalance">Initial balance *</label>
     <input type="text" id="${prefix}_initialBalance" required inputmode="decimal" placeholder="0.00">
 
@@ -191,13 +222,14 @@ function readFormPayload(prefix, includeUserId) {
   }
 
   const balRaw = document.getElementById(`${prefix}_balance`).value.trim();
+  const subEl = document.getElementById(`${prefix}_accountSubcategory`);
   const payload = {
     accountName: document.getElementById(`${prefix}_accountName`).value.trim(),
     accountNumber: num,
     description: document.getElementById(`${prefix}_description`).value.trim() || null,
     normalSide: document.getElementById(`${prefix}_normalSide`).value,
     accountCategory: document.getElementById(`${prefix}_accountCategory`).value.trim(),
-    accountSubcategory: document.getElementById(`${prefix}_accountSubcategory`).value.trim(),
+    accountSubcategory: subEl ? subEl.value.trim() : "N/A",
     initialBalance: parseFloat(parseMoneyInput(document.getElementById(`${prefix}_initialBalance`).value)),
     debit: parseFloat(parseMoneyInput(document.getElementById(`${prefix}_debit`).value)),
     credit: parseFloat(parseMoneyInput(document.getElementById(`${prefix}_credit`).value)),
@@ -228,8 +260,6 @@ function buildFilterQuery() {
   if (num) params.set("accountNumber", num);
   const c = document.getElementById("filterCategory")?.value?.trim();
   if (c) params.set("category", c);
-  const sub = document.getElementById("filterSubcategory")?.value?.trim();
-  if (sub) params.set("subcategory", sub);
   const minB = document.getElementById("filterMinBal")?.value?.trim();
   if (minB) params.set("minBalance", parseMoneyInput(minB));
   const maxB = document.getElementById("filterMaxBal")?.value?.trim();
@@ -422,7 +452,7 @@ function init() {
         document.getElementById("edit_description").value = a.description || "";
         document.getElementById("edit_normalSide").value =
           a.normalSide === "Credit" ? "Credit" : "Debit";
-        document.getElementById("edit_accountCategory").value = a.accountCategory || "";
+        fillCategorySelect(document.getElementById("edit_accountCategory"), a.accountCategory);
         document.getElementById("edit_accountSubcategory").value = a.accountSubcategory || "";
         document.getElementById("edit_initialBalance").value = formatMoney(a.initialBalance);
         document.getElementById("edit_debit").value = formatMoney(a.debit);
