@@ -1,6 +1,7 @@
 /**
- * Shared script for regular-user-home, manager-home, admin-home.
- * Ensures user is in sessionStorage (else redirect to login), shows username in badge, handles Back to Login (clear session + redirect).
+ * Shared script for regular-user-home, manager-home, admin-home, etc.
+ * Ensures user is in sessionStorage (else redirect to login), shows username in badge.
+ * Sign out uses the Log out control in app-shell.js.
  */
 (function () {
   const userJson = sessionStorage.getItem("user");
@@ -17,11 +18,8 @@
     badge.style.display = "flex";
   }
 
-  const backBtn = document.getElementById("backToLogin");
-  if (backBtn) {
-    backBtn.addEventListener("click", function () {
-      sessionStorage.removeItem("user");
-      window.location.href = "index.html";
-    });
+  const shellUsername = document.getElementById("shellUsername");
+  if (shellUsername) {
+    shellUsername.textContent = user.username;
   }
 })();

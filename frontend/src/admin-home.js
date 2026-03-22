@@ -2,6 +2,21 @@
  * Admin home: Add User (POST /admin/users), All Users table with Activate/Deactivate/Suspend/Send Email/Edit,
  * Expired Passwords report, and Edit User modal (PUT /admin/users/{id}). Password rules enforced on add/edit.
  */
+(function enforceAdminHomeOnly() {
+  try {
+    const raw = sessionStorage.getItem("user");
+    const u = raw ? JSON.parse(raw) : null;
+    const r = u ? String(u.role || "").toUpperCase() : "";
+    if (!u || r !== "ADMIN") {
+      if (r === "MANAGER") window.location.replace("manager-home.html");
+      else if (r === "USER") window.location.replace("regular-user-home.html");
+      else window.location.replace("index.html");
+    }
+  } catch {
+    window.location.replace("index.html");
+  }
+})();
+
 const API_BASE_URL = "http://localhost:8080";
 
 /** Password rules: min 8 chars, start with letter, at least one letter/number/special. Returns error string or null. */
