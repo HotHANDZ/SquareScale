@@ -1,39 +1,121 @@
-+----------------------+
-|        users         |
-+----------------------+
-| PK userID : INT      |
-| username             |
-| passwordHash         |
-| email                |
-| createdAt            |
-| roleID : INT         |
-| isActive : TINYINT   |
-| firstName            |
-| lastName             |
-+----------------------+
-           │
-           │ (1-to-1)
-           ▼
-+-------------------------------+
-|           accounts            |
-+-------------------------------+
-| PK/FK userID                  |
-| description                   |
-| createdAt                     |
-| initialBalance : FLOAT        |
-| debit : FLOAT                 |
-| credit : FLOAT                |
-| balance : FLOAT               |
-+-------------------------------+
-           │
-           │ (1-to-many)
-           ▼
-+----------------------+
-|    transactions      |
-+----------------------+
-| PK transactionID     |
-| FK userID            |
-| amount               |
-| type                 |
-| timestamp            |
-+----------------------+
++------------------------------+
+|            users             |
++------------------------------+
+| PK userID : INT              |
+| username                     |
+| passwordHash                 |
+| email                        |
+| createdAt : TIMESTAMP        |
+| roleID : INT                 |
+| isActive : TINYINT           |
+| firstName                    |
+| lastName                     |
+| failed_login_attempts : INT  |
+| passwordLastSet : DATETIME   |
+| suspendedUntil : DATETIME    |
++------------------------------+
+        │
+        │ (1-to-many)
+        ▼
++------------------------------+
+|           accounts           |
++------------------------------+
+| PK accountId : INT           |
+| accountName                  |
+| accountNumber                |
+| description                  |
+| normalSide                   |
+| accountCategory              |
+| accountSubcategory           |
+| initialBalance : DECIMAL     |
+| debit : DECIMAL              |
+| credit : DECIMAL             |
+| balance : DECIMAL            |
+| createdAt : DATETIME         |
+| FK userId : INT              |
+| accountOrder                 |
+| statementType                |
+| commentText                  |
+| isActive : TINYINT           |
++------------------------------+
+        │
+        │ (1-to-many)
+        ├──────────────────────────────┐
+        ▼                              ▼
++------------------------------+   +------------------------------+
+|        journal_lines         |   |        ledger_entries        |
++------------------------------+   +------------------------------+
+| PK line_id : INT             |   | PK ledger_id : INT           |
+| FK journal_id : INT          |   | FK account_id : INT          |
+| FK account_id : INT          |   | FK journal_id : INT          |
+| debit_amount : DECIMAL       |   | entry_date : DATETIME        |
+| credit_amount : DECIMAL      |   | debit_amount : DECIMAL       |
+| description                  |   | credit_amount : DECIMAL      |
+| created_at : DATETIME        |   | balance_after : DECIMAL      |
++------------------------------+   | post_reference              |
+                                  | created_at : DATETIME       |
+                                  +------------------------------+
+            ▲                              ▲
+            │ (many-to-1)                  │ (many-to-1)
+            └───────────────┬──────────────┘
+                            │
+                            ▼
+                +------------------------------+
+                |       journal_entries        |
+                +------------------------------+
+                | PK journal_id : INT          |
+                | FK created_by : INT          |
+                | FK approved_by : INT         |
+                | status : INT                 |
+                | total_debit : DECIMAL        |
+                | total_credit : DECIMAL       |
+                | submitted_at : DATETIME      |
+                | approved_at : DATETIME       |
+                | rejection                   |
+                | created_at : DATETIME        |
+                +------------------------------+
+                            │
+                            │ (many-to-1)
+                            ▼
+                     +------------------------------+
+                     |            users             |
+                     +------------------------------+
+
+===========================================================================================
+
++------------------------------+
+|        transactions          |
++------------------------------+
+| PK transactionID : INT       |
+| FK userID : INT              |
+| amount : FLOAT               |
+| type                         |
+| timestamp : TIMESTAMP        |
++------------------------------+
+        ▲
+        │ (many-to-1)
+        │
++------------------------------+
+|            users             |
++------------------------------+
+
+==============================================================================
+
++------------------------------+
+|          event_log           |
++------------------------------+
+| PK eventId : BIGINT          |
+| entityType                   |
+| entityId : BIGINT            |
+| action                       |
+| FK userId : INT              |
+| createdAt : DATETIME         |
+| beforeImage : LONGTEXT       |
+| afterImage : LONGTEXT        |
++------------------------------+
+        ▲
+        │ (many-to-1)
+        │
++------------------------------+
+|            users             |
++------------------------------+
