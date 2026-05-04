@@ -33,4 +33,8 @@ INSERT INTO `users` (`userID`,`username`,`passwordHash`,`email`,`createdAt`,`rol
 (12,'adminClaudio','1234','costaclaudio2001@gmail.com','2026-03-03 09:17:15',3,1,'Claudio3','Costa',0),
 (13,'regularAminah','1234','aminahbabar@gmail.com','2026-03-03 09:17:15',1,1,'Aminah1','Babar',0),
 (14,'adminAminah','1234','aminahbabar@gmail.com','2026-03-03 09:17:15',2,1,'Aminah2','Babar',0),
-(15,'managerAminah','1234','aminahbabar@gmail.com','2026-03-03 09:17:15',3,1,'Aminah3','Babar',0);
+(15,'managerAminah','1234','aminahbabar@gmail.com','2026-03-03 09:17:15',3,1,'Aminah3','Babar',0),
+-- Shared demo logins (same for everyone who loads this seed from the repo)
+(16,'User','1234','demo.user@squarescale.local','2026-03-03 09:17:15',1,1,'Demo','User',0),
+(17,'Manager','1234','demo.manager@squarescale.local','2026-03-03 09:17:15',2,1,'Demo','Manager',0),
+(18,'Admin','1234','demo.admin@squarescale.local','2026-03-03 09:17:15',3,1,'Demo','Administrator',0);

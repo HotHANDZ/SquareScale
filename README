@@ -97,3 +97,13 @@ Double‑click frontend/index.html in File Explorer to open it in the browser.
 
 
 Order: Start the backend first, then open the frontend, so the login request can reach http://localhost:8080.
+
+----------------------------------------------------------------------------------
+DEFAULT DEMO LOGINS (after loading database/squarescale_db/squarescale_users.sql)
+
+These are in the shared SQL seed so any clone of the repo can use the same accounts:
+  Admin   / 1234  (administrator)
+  Manager / 1234  (manager)
+  User    / 1234  (regular accountant)
+
+Usernames are case-sensitive. See USER_MANUAL.md for details and security notes.

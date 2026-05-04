@@ -1,0 +1,25 @@
+{
+  "name": "square-scale-project",
+  "version": "1.0.0",
+  "description": "Requirements",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "manual:docx": "node scripts/build-user-manual-docx.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HotHANDZ/SquareScale.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/HotHANDZ/SquareScale/issues"
+  },
+  "homepage": "https://github.com/HotHANDZ/SquareScale#readme",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}
